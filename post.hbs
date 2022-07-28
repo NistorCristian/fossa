@@ -27,15 +27,97 @@ into the {body} of the default.hbs template --}}
                 <h1 class="post-full-title">{{title}}</h1>
             </header>
 
+            <div class="author-card-container">
+                {{#has author="count:>1"}}
+                    {{> "byline-multiple"}}
+                {{else}}
+                    {{> "byline-single"}}
+                {{/has}}
+            </div>
+
             {{#if feature_image}}
-            <figure class="post-full-image" style="background-image: url({{feature_image}})">
+            <figure class="post-full-image">
+                <img src="{{feature_image}}" alt="{{title}}">
             </figure>
             {{/if}}
 
-            <section class="post-full-content">
-                <div class="post-content">
-                    {{content}}
+            {{#has tag="#newsletter-subscription"}}
+                {{^has tag="#table-of-contents, #related-posts"}}
+                    <div class="horizontal-newsletter">
+                        <div id="confirmsubscription" style="display: none;">
+                            <p>Thank you for submitting details. Your email address is added to our subscription list.</p>
+                            </div>
+                            <script src="//app-ab45.marketo.com/js/forms2/js/forms2.min.js"></script>
+                            <form id="mktoForm_1377"></form>
+                            <script>
+                            MktoForms2.loadForm("//app-ab45.marketo.com", "246-JVA-804", 1377, function(form) {
+                            //Add an onSuccess handler
+                            form.onSuccess(function(values, followUpUrl) {
+                            form.getFormElem().hide();
+                            document.getElementById('confirmsubscription').style.display = 'block';
+                            //return false to prevent the submission handler from taking the lead to the follow up url.
+                            return false;
+                            });
+                            });
+                        </script>
+                    </div>
+                {{/has}}
+            {{/has}}
+
+            <section class="post-full-content-container">
+                {{#has tag="#table-of-contents"}}
+                    <div class="sidebar">
+                        <div class="gh-toc"></div>
+                        {{#has tag="#newsletter-subscription"}}
+                            <div id="confirmsubscription" style="display: none;">
+                                <p>Thank you for submitting details. Your email address is added to our subscription list.</p>
+                                </div>
+                                <script src="//app-ab45.marketo.com/js/forms2/js/forms2.min.js"></script>
+                                <form id="mktoForm_1377"></form>
+                                <script>
+                                MktoForms2.loadForm("//app-ab45.marketo.com", "246-JVA-804", 1377, function(form) {
+                                //Add an onSuccess handler
+                                form.onSuccess(function(values, followUpUrl) {
+                                form.getFormElem().hide();
+                                document.getElementById('confirmsubscription').style.display = 'block';
+                                //return false to prevent the submission handler from taking the lead to the follow up url.
+                                return false;
+                                });
+                                });
+                            </script>
+                        {{/has}}
+                    </div>
+                {{/has}}
+                <div class="post-full-content">
+                    <div class="post-content">
+                        {{content}}
+                    </div>
                 </div>
+                {{#has tag="#related-posts"}}
+                    <div class="sidebar">
+                        {{#has tag="#related-posts"}}
+                            <div class="related-posts"></div>
+                        {{/has}}
+                        {{#has tag="#newsletter-subscription"}}
+                            <div id="confirmsubscription" style="display: none;">
+                                <p>Thank you for submitting details. Your email address is added to our subscription list.</p>
+                                </div>
+                                <script src="//app-ab45.marketo.com/js/forms2/js/forms2.min.js"></script>
+                                <form id="mktoForm_1377"></form>
+                                <script>
+                                MktoForms2.loadForm("//app-ab45.marketo.com", "246-JVA-804", 1377, function(form) {
+                                //Add an onSuccess handler
+                                form.onSuccess(function(values, followUpUrl) {
+                                form.getFormElem().hide();
+                                document.getElementById('confirmsubscription').style.display = 'block';
+                                //return false to prevent the submission handler from taking the lead to the follow up url.
+                                return false;
+                                });
+                                });
+                            </script>
+                        {{/has}}
+                    </div>
+                {{/has}}
             </section>
 
             {{!-- Email subscribe form at the bottom of the page --}}
@@ -48,21 +130,6 @@ into the {body} of the default.hbs template --}}
                 <a id="subscribe-form-demo-button" href="/request-demo?utm_source=blog">Request a Demo</a>
               </div>
             </section>
-
-            <footer class="post-full-footer">
-
-                {{!-- There are two options for how we display the byline/author-info.
-                If the post has more than one author, we load a specific template
-                from includes/byline-multiple.hbs, otherwise, we just use the
-                default byline. --}}
-
-                {{#has author="count:>1"}}
-                    {{> "byline-multiple"}}
-                {{else}}
-                    {{> "byline-single"}}
-                {{/has}}
-
-            </footer>
 
             {{!--
             <section class="post-full-comments">
@@ -86,12 +153,12 @@ into the {body} of the default.hbs template --}}
                     {{#if ../primary_tag.feature_image}}
                         style="background-image: url({{../primary_tag.feature_image}})"
                     {{else}}
-                        {{#if @blog.cover_image}}
-                            style="background-image: url({{@blog.cover_image}})"{{/if}}
+                        {{#if @site.cover_image}}
+                            style="background-image: url({{@site.cover_image}})"{{/if}}
                     {{/if}}
                 >
                     <header class="read-next-card-header">
-                        <small class="read-next-card-header-sitetitle">&mdash; {{@blog.title}} &mdash;</small>
+                        <small class="read-next-card-header-sitetitle">&mdash; {{@site.title}} &mdash;</small>
                         {{#../primary_tag}}
                         <h3 class="read-next-card-header-title"><a href="{{url}}">{{name}}</a></h3>
                         {{/../primary_tag}}
@@ -126,7 +193,7 @@ into the {body} of the default.hbs template --}}
 
         {{#if @labs.subscribers}}
         <section class="subscribe-form">
-          <h3 class="subscribe-form-title">Subscribe to {{@blog.title}}</h3>
+          <h3 class="subscribe-form-title">Subscribe to {{@site.title}}</h3>
           <p>Get the latest posts delivered right to your inbox</p>
           {{subscribe_form placeholder="youremail@example.com"}}
         </section>
@@ -148,6 +215,56 @@ into the {body} of the default.hbs template --}}
 //   Dropping the scroll event and using only a raf loop results in smoother
 //   scrolling but continuous processing even when not scrolling
 $(document).ready(function () {
+
+    const api = new GhostContentAPI({
+        url: 'https://fossa-dev.ghost.io',
+        key: '6b9df0bde92e37e4a5bfd9a777',
+        version: "v4.0"
+    });
+
+    if(typeof relatedPosts != 'undefined'){
+        relatedPosts.forEach(function(id){
+            api.posts.read({id: id, include: 'tags'})
+            .then((post) => {
+
+                var featureImage = '';
+                if(post.feature_image != null){
+                    featureImage = '<img src="'+ post.feature_image + '">';
+                }
+
+                var primaryTag = '';
+                if(post.primary_tag != null){
+                    primaryTag = '<a href="'+ post.primary_tag.url +'" class="primary-tag">'+ post.primary_tag.name +'</a>';
+                }
+                $('.related-posts').append('<div class="post-card"><div>'+ featureImage +'</div><div class="inner">'+ primaryTag +' <h3>'+ post.title +'</h3><div class="reading-time">'+ post.reading_time +' min read</div><a href="'+ post.url +'" class="link"></a></div></div>');
+            })
+        });
+    }
+
+    function convertToSlug(Text) {
+    return Text.toLowerCase()
+                .replace(/[^\w ]+/g, '')
+                .replace(/ +/g, '-');
+    }
+
+    $.each($('.post-content h2'), function(){
+        if(typeof $(this).attr('id') == 'undefined'){
+            $(this).attr('id', convertToSlug($(this).text()))
+        }
+	});
+
+    if($('.gh-toc').length){
+        tocbot.init({
+            tocSelector: '.gh-toc',
+            contentSelector: '.post-content',
+            ignoreSelector: '.formheader',
+            headingSelector: 'h2',
+            headingsOffset: 80,
+            scrollSmoothOffset: -80,
+            hasInnerContainers: true,
+        });
+    }
+
     // Start fitVids
     var $postContent = $(".post-full-content");
     $postContent.fitVids();
@@ -165,12 +282,18 @@ $(document).ready(function () {
     function onScroll() {
         lastScrollY = window.scrollY;
         requestTick();
+        if($('.gh-toc').length){
+            tocbot.refresh();
+        }
     }
 
     function onResize() {
         lastWindowHeight = window.innerHeight;
         lastDocumentHeight = $(document).height();
         requestTick();
+        if($('.gh-toc').length){
+            tocbot.refresh();
+        }
     }
 
     function requestTick() {

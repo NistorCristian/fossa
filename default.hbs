@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{lang}}">
+<html lang="{{@site.lang}}">
 <head>
 
     {{!-- Document Settings --}}
@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.11.1/tocbot.css">
     <link rel="stylesheet" href="{{asset "built/fossasite.css"}}">
 
     {{!-- Styles'n'Scripts --}}
@@ -21,7 +22,7 @@
     {{ghost_head}}
 
 </head>
-<body class="{{body_class}}">
+<body class="{{body_class}} {{#is "home"}}{{#match @custom.homepage_newsletter_subscription "Gray"}}tag-hash-newsletter-subscription-gray{{/match}}{{/is}}">
     {{!-- Begin FOSSA Header --}}
     <div class="landing-cover-container" style="z-index: 99999;">
       <div class="landing-cover">
@@ -112,10 +113,10 @@
     <div id="subscribe" class="subscribe-overlay">
         <a class="subscribe-overlay-close" href="#"></a>
         <div class="subscribe-overlay-content">
-            {{#if @blog.logo}}
-                <img class="subscribe-overlay-logo" src="{{@blog.logo}}" alt="{{@blog.title}}" />
+            {{#if @site.logo}}
+                <img class="subscribe-overlay-logo" src="{{@site.logo}}" alt="{{@site.title}}" />
             {{/if}}
-            <h1 class="subscribe-overlay-title">Subscribe to {{@blog.title}}</h1>
+            <h1 class="subscribe-overlay-title">Subscribe to {{@site.title}}</h1>
             <p class="subscribe-overlay-description">Stay up to date! Get all the latest &amp; greatest posts delivered straight to your inbox</p>
             {{subscribe_form placeholder="youremail@example.com"}}
         </div>
@@ -136,6 +137,8 @@
     {{!-- animated navbar (react + react dom + nav component + mount file) --}}
     <script type="text/javascript" crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
     <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.12.3/tocbot.min.js"></script>
+    <script src="https://unpkg.com/@tryghost/content-api@1.11.0/umd/content-api.min.js"></script>
     <script src="{{asset "built/animatedNavbar.js"}}"></script>
     <script src="{{asset "built/nav-mount.js"}}"></script>
 

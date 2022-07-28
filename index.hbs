@@ -3,34 +3,36 @@
 into the {body} of the default.hbs template --}}
 
 {{!-- The big featured header, it uses blog cover image as a BG if available --}}
-<header class="site-header outer {{#if @blog.cover_image}}" style="background-image: url({{@blog.cover_image}}){{else}}no-cover{{/if}}">
+<header class="site-header outer {{#if @site.cover_image}}" style="background-image: url({{@site.cover_image}}){{else}}no-cover{{/if}}">
     <div class="inner">
         <div class="site-header-content">
             <h1 class="site-title">  
-              {{@blog.title}}
+              {{@site.title}}
             </h1>
-            <h2 class="site-description">{{@blog.description}}</h2>
+            <h2 class="site-description">{{@site.description}}</h2>
         </div>
         {{> "site-nav"}}
     </div>
 </header>
 
-{{#get "posts" limit="2" filter="featured:true"}}
-    {{#if posts}}
-        <div class="post-feed-featured-container">
-            <div class="outer">
-                <div class="inner">
-                    <h3>Featured Articles</h3>
-                    <div class="post-feed-featured">
-                        {{#foreach posts}}
-                            {{> "post-card"}}
-                        {{/foreach}}
+{{^is "paged"}}
+    {{#get "posts" limit="2" include="tags,authors" filter="featured:true"}}
+        {{#if posts}}
+            <div class="post-feed-featured-container">
+                <div class="outer">
+                    <div class="inner">
+                        <h3>Featured Articles</h3>
+                        <div class="post-feed-featured">
+                            {{#foreach posts}}
+                                {{> "post-card"}}
+                            {{/foreach}}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    {{/if}}
-{{/get}}
+        {{/if}}
+    {{/get}}
+{{/is}}
 
 {{!-- The main content area --}}
 <main id="site-main" class="site-main outer">
@@ -43,21 +45,28 @@ into the {body} of the default.hbs template --}}
                 {{!-- The tag below includes the markup for each post - partials/post-card.hbs --}}
                 {{> "post-card"}}
 
-                {{#is "home"}}
-                    {{#has number="6"}}
-                        <div class="subscribe-to-newsletter">
-                            <div class="inner">
-                                <div class="subtitle">Subscribe to our Newsletter</div>
-                                <div class="title">OSS News and Insights</div>
-                                <p>Delivered Straight to Your Inbox</p>
-                                <form data-members-form>
-                                    <input placeholder="your@email.com" data-members-email type="email" required="true"/>
-                                    <button type="submit">Subscribe</button>
-                                </form>
-                            </div>
-                        </div>
-                    {{/has}}
-                {{/is}}
+                {{^match @custom.homepage_newsletter_subscription "None"}}
+                    {{#is "home"}}
+                        {{#has number="6"}}
+                            <div id="confirmsubscription" style="display: none;">
+                                <p>Thank you for submitting details. Your email address is added to our subscription list.</p>
+                                </div>
+                                <script src="//app-ab45.marketo.com/js/forms2/js/forms2.min.js"></script>
+                                <form id="mktoForm_1377"></form>
+                                <script>
+                                MktoForms2.loadForm("//app-ab45.marketo.com", "246-JVA-804", 1377, function(form) {
+                                //Add an onSuccess handler
+                                form.onSuccess(function(values, followUpUrl) {
+                                form.getFormElem().hide();
+                                document.getElementById('confirmsubscription').style.display = 'block';
+                                //return false to prevent the submission handler from taking the lead to the follow up url.
+                                return false;
+                                });
+                                });
+                            </script>
+                        {{/has}}
+                    {{/is}}
+                {{/match}}
 
             {{/foreach}}
         </div>
